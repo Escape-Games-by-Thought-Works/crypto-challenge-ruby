@@ -11,7 +11,9 @@ class InputSplitter
     for i in 0.step(str.bytesize - 1, 8)
       block = 0
       for j in 0..7
-        block |= str.getbyte(i + j) << (56 - (j * 8))
+        if i + j < str.bytesize
+          block |= str.getbyte(i + j) << (56 - (j * 8))
+        end
       end
       blocks.push(block)
     end
