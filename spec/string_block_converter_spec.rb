@@ -1,21 +1,21 @@
-require 'input_splitter'
+require 'string_block_converter'
 
-RSpec.describe InputSplitter do
-  input_splitter = InputSplitter.new
+RSpec.describe StringBlockConverter do
+  converter = StringBlockConverter.new
   it 'splits a 64bit block into 4 16bit blocks' do
-    blocks = input_splitter.split64(0x0123456789abcdef)
+    blocks = converter.split64(0x0123456789abcdef)
     expect(blocks).to eq([0x0123, 0x4567, 0x89ab, 0xcdef])
   end
 
   it 'splits a string into 64bit blocks' do
-    blocks = input_splitter.split_string('some str')
+    blocks = converter.str_to_blocks('some str')
 
     blocks_as_hex = blocks.each.map {|b| b.to_s(16)}
     expect(blocks_as_hex).to eq([chars_as_block('s', 'o', 'm', 'e', ' ', 's', 't', 'r')])
   end
 
   it 'fills a string with zeros' do
-    blocks = input_splitter.split_string('some string')
+    blocks = converter.str_to_blocks('some string')
 
     blocks_as_hex = blocks.each.map {|b| b.to_s(16)}
     expect(blocks.length).to eq(2)

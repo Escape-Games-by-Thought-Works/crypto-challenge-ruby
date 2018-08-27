@@ -1,4 +1,4 @@
-class InputSplitter
+class StringBlockConverter
   def split64(block64)
     [block64 >> (64 - 16),
      (block64 >> 32) & 0xffff,
@@ -6,7 +6,7 @@ class InputSplitter
      block64 & 0xffff]
   end
 
-  def split_string(str)
+  def str_to_blocks(str)
     blocks = []
     for i in 0.step(str.bytesize - 1, 8)
       block = 0
