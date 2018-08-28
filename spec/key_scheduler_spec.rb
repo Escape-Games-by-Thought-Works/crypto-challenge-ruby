@@ -1,0 +1,15 @@
+require 'key_scheduler'
+
+RSpec.describe KeyScheduler do
+  describe '#key' do
+    it 'retrieves the first six keys' do
+      scheduler = KeyScheduler.new(0xFFFF0000EEEE1111DDDD2222CCCC3333)
+      expect(scheduler.key(0)).to eq(0xFFFF)
+      expect(scheduler.key(1)).to eq(0x0000)
+      expect(scheduler.key(2)).to eq(0xEEEE)
+      expect(scheduler.key(3)).to eq(0x1111)
+      expect(scheduler.key(4)).to eq(0xDDDD)
+      expect(scheduler.key(5)).to eq(0x2222)
+    end
+  end
+end
