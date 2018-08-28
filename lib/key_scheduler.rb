@@ -15,7 +15,7 @@ class KeyScheduler
   end
 
   def next
-    KeyScheduler.new(@main_key, (@offset + 6) % 8)
+    KeyScheduler.new(key_for_next_round, (@offset + 6) % 8)
   end
 
 private
@@ -26,10 +26,18 @@ private
   end
 
   def key_for_index(index)
-    if (index + @offset > 7)
-      return rotated_key
+    if index + @offset > 7
+      rotated_key
     else
-      return @main_key
+      @main_key
+    end
+  end
+
+  def key_for_next_round
+    if @offset + 6 > 8
+      rotated_key
+    else
+      @main_key
     end
   end
 end

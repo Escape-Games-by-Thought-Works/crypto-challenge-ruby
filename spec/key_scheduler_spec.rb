@@ -23,6 +23,16 @@ RSpec.describe KeyScheduler do
       expect(next_round.key(1)).to eq(0x3333)
       expect(next_round.key(2)).to eq(0x01dd)
       expect(next_round.key(3)).to eq(0xdc22)
+      expect(next_round.key(4)).to eq(0x23bb)
+      expect(next_round.key(5)).to eq(0xba44)
+    end
+
+    it 'creates more KeyScheduler incrementally' do
+      scheduler = KeyScheduler.for_key(0xFFFF0000EEEE1111DDDD2222CCCC3333)
+
+      third_round = scheduler.next.next
+      expect(third_round.key(0)).to eq(0x4599)
+      expect(third_round.key(1)).to eq(0x9866)
     end
   end
 end
