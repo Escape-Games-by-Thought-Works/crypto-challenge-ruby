@@ -11,7 +11,9 @@ class KeyScheduler
   def key(index)
     shift_by = (index + @offset) % 8
 
-    (key_for_index(index) >> (128 - (shift_by + 1) * 16)) & 0xffff
+    result_with_overflow = key_for_index(index) >> (128 - (shift_by + 1) * 16)
+    
+    result_with_overflow & 0xffff
   end
 
   def next
