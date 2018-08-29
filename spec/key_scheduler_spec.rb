@@ -1,38 +1,35 @@
 require 'key_scheduler'
 
 RSpec.describe KeyScheduler do
-  describe '#key' do
-    it 'retrieves the first six keys' do
+  describe '#encrypt_keys' do
+    it 'retrieves the keys for the first round' do
       scheduler = KeyScheduler.for_key(0xFFFF0000EEEE1111DDDD2222CCCC3333)
-      expect(scheduler.key(0)).to eq(0xFFFF)
-      expect(scheduler.key(1)).to eq(0x0000)
-      expect(scheduler.key(2)).to eq(0xEEEE)
-      expect(scheduler.key(3)).to eq(0x1111)
-      expect(scheduler.key(4)).to eq(0xDDDD)
-      expect(scheduler.key(5)).to eq(0x2222)
+      keys = scheduler.encrypt_keys(0)
+      expect(keys[0]).to eq(0xFFFF)
+      expect(keys[1]).to eq(0x0000)
+      expect(keys[2]).to eq(0xEEEE)
+      expect(keys[3]).to eq(0x1111)
+      expect(keys[4]).to eq(0xDDDD)
+      expect(keys[5]).to eq(0x2222)
+    end
+
+    it 'retrieves the keys for the second round' do
+      scheduler = KeyScheduler.for_key(0xFFFF0000EEEE1111DDDD2222CCCC3333)
+      keys = scheduler.encrypt_keys(1)
+      expect(keys[0]).to eq(0xCCCC)
+      expect(keys[1]).to eq(0x3333)
+      expect(keys[2]).to eq(0x01dd)
+      expect(keys[3]).to eq(0xdc22)
+      expect(keys[4]).to eq(0x23bb)
+      expect(keys[5]).to eq(0xba44)
+    end
+
+    it 'retrieves the keys for the third round' do
+      scheduler = KeyScheduler.for_key(0xFFFF0000EEEE1111DDDD2222CCCC3333)
+      keys = scheduler.encrypt_keys(2)
+      expect(keys[0]).to eq(0x4599)
+      expect(keys[1]).to eq(0x9866)
     end
   end
 
-  describe '#next' do
-    it 'creates the KeyScheduler for the next round' do
-      scheduler = KeyScheduler.for_key(0xFFFF0000EEEE1111DDDD2222CCCC3333)
-
-      next_round = scheduler.next
-
-      expect(next_round.key(0)).to eq(0xCCCC)
-      expect(next_round.key(1)).to eq(0x3333)
-      expect(next_round.key(2)).to eq(0x01dd)
-      expect(next_round.key(3)).to eq(0xdc22)
-      expect(next_round.key(4)).to eq(0x23bb)
-      expect(next_round.key(5)).to eq(0xba44)
-    end
-
-    it 'creates more KeyScheduler incrementally' do
-      scheduler = KeyScheduler.for_key(0xFFFF0000EEEE1111DDDD2222CCCC3333)
-
-      third_round = scheduler.next.next
-      expect(third_round.key(0)).to eq(0x4599)
-      expect(third_round.key(1)).to eq(0x9866)
-    end
-  end
 end

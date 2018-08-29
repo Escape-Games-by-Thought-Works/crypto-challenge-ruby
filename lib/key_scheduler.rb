@@ -8,38 +8,34 @@ class KeyScheduler
     new(main_key, 0)
   end
 
-  def key(index)
-    shift_by = (index + @offset) % 8
+  def encrypt_keys(round)
+    (0..5).map { |idx| subkey(idx, round) }
+  end
 
-    result_with_overflow = key_for_index(index) >> (128 - (shift_by + 1) * 16)
-    
+
+private
+  def rotate_key(key)
+    overflow = key >> (128 - 25)
+    key_with_25_zeros = (key << 25) & 0xffffffffffffffffffffffffffffffff
+    return key_with_25_zeros | overflow
+  end
+
+  def compute_key(global_key_idx)
+    rotations = (global_key_idx / 8).to_i
+    tmp_key = @main_key
+    rotations.times do
+      tmp_key = rotate_key(tmp_key)
+    end
+    return tmp_key
+  end
+
+  def subkey(index, round)
+    global_key_idx = index + round * 6
+    shift_by = global_key_idx % 8
+
+    result_with_overflow = compute_key(global_key_idx) >> (128 - (shift_by + 1) * 16)
+
     result_with_overflow & 0xffff
   end
 
-  def next
-    KeyScheduler.new(key_for_next_round, (@offset + 6) % 8)
-  end
-
-private
-  def rotated_key
-    overflow = @main_key >> (128 - 25)
-    key_with_25_zeros = (@main_key << 25) & 0xffffffffffffffffffffffffffffffff
-    key_with_25_zeros | overflow
-  end
-
-  def key_for_index(index)
-    if index + @offset > 7
-      rotated_key
-    else
-      @main_key
-    end
-  end
-
-  def key_for_next_round
-    if @offset + 6 > 8
-      rotated_key
-    else
-      @main_key
-    end
-  end
 end
