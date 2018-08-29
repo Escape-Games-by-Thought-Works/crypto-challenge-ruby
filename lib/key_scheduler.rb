@@ -12,6 +12,14 @@ class KeyScheduler
     (0..5).map { |idx| subkey(idx, round) }
   end
 
+  def decrypt_keys(round)
+    [invert_mult(subkey(0, 8 - round)),
+    invert_add(subkey(2, 8 - round)),
+    invert_add(subkey(1, 8 - round)),
+    invert_mult(subkey(3, 8 - round)),
+    subkey(4, 7 - round),
+    subkey(5, 7 - round)]
+  end
 
 private
   def rotate_key(key)
@@ -36,6 +44,34 @@ private
     result_with_overflow = compute_key(global_key_idx) >> (128 - (shift_by + 1) * 16)
 
     result_with_overflow & 0xffff
+  end
+
+  def invert_add(value)
+    (0x10000 - value) & 0xFFFF
+  end
+
+  def invert_mult(value)
+    if value == 0 || value == 1
+      return value # 0 and 1 are their own inverses
+    end
+
+    # euclidean algorithm
+    y = 0x10001
+    t0 = 1
+    t1 = 0
+    while true
+      t1 += (y / value).to_i * t0
+      y = y % value
+      if y == 1
+        return (1 - t1) & 0xffff
+      end
+
+      t0 += (value / y).to_i * t1
+      value = value % y
+      if value == 1
+        return t0
+      end
+    end
   end
 
 end
