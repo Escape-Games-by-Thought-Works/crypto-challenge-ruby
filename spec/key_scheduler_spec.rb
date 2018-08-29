@@ -44,8 +44,8 @@ RSpec.describe KeyScheduler do
     it 'inverts keys 2 and 3 for addition' do
       scheduler = KeyScheduler.for_key(0xFFFF0000EEEE1111DDDD2222CCCC3333)
       keys = scheduler.decrypt_keys(7)
-      expect(Operations.add(keys[1], 0x01dd)).to eq(0)
-      expect(Operations.add(keys[2], 0x3333)).to eq(0)
+      expect(Operations.add(keys[1], 0x3333)).to eq(0)
+      expect(Operations.add(keys[2], 0x01dd)).to eq(0)
     end
 
     it 'inverts keys 1 and 4 for multiplication' do

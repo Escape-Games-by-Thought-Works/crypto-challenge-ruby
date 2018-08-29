@@ -14,8 +14,8 @@ class KeyScheduler
 
   def decrypt_keys(round)
     [invert_mult(subkey(0, 8 - round)),
-    invert_add(subkey(2, 8 - round)),
     invert_add(subkey(1, 8 - round)),
+    invert_add(subkey(2, 8 - round)),
     invert_mult(subkey(3, 8 - round)),
     subkey(4, 7 - round),
     subkey(5, 7 - round)]
