@@ -21,7 +21,7 @@ RSpec.describe 'rounds' do
 
     dec_rounds = [
       HalfRound.new(dec_keys1),
-      InnerRound.new(enc_keys1),
+      InnerRound.new(dec_keys1),
       HalfRound.new(dec_keys2)
     ]
 
@@ -53,10 +53,10 @@ RSpec.describe 'rounds' do
 
     dec_rounds = [
       HalfRound.new(dec_keys1),
-      InnerRound.new(enc_keys2),
+      InnerRound.new(dec_keys1),
       swap,
       HalfRound.new(swap.run(dec_keys2)),
-      InnerRound.new(enc_keys1),
+      InnerRound.new(dec_keys2),
       HalfRound.new(dec_keys3)
     ]
 
