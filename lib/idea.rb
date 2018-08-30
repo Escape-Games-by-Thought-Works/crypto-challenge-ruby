@@ -2,6 +2,7 @@ require 'half_round'
 require 'inner_round'
 require 'swap_round'
 require 'string_block_converter'
+require 'base64'
 
 class IDEA
 
@@ -11,13 +12,18 @@ class IDEA
   end
 
   def encrypt_string(string)
-    @converter.str_to_blocks(string)
+    encrypted_blocks = @converter.str_to_blocks(string)
       .map { |b| @converter.split64(b) }
       .map { |b| encrypt_block(b) }
+
+    Base64.strict_encode64(@converter.join_string(encrypted_blocks.flatten))
   end
 
-  def decrypt_string(blocks)
+  def decrypt_string(input_str)
+    blocks = @converter.str_to_blocks(Base64.decode64(input_str))
+
     blocks64 = blocks
+      .map { |block64| @converter.split64(block64) }
       .map { |four_blocks| decrypt_block(four_blocks) }
       .map { |four_blocks| @converter.join64(four_blocks) }
     @converter.join_string(blocks64)

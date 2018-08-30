@@ -15,6 +15,8 @@ RSpec.describe IDEA do
 
     result = idea.encrypt_string('some string with content')
 
+    expect(result).to be_a(String)
+    expect(result).not_to eq('some string with content')
     expect(idea.decrypt_string(result)).to eq('some string with content')
   end
 end
