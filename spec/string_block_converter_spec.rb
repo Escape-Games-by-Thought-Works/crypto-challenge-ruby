@@ -24,6 +24,13 @@ RSpec.describe StringBlockConverter do
       chars_as_block('i', 'n', 'g', "\0", "\0", "\0", "\0", "\0")
       ])
   end
+
+  it 'splits string and puts it back together' do
+    blocks = converter.str_to_blocks('some string')
+    str = converter.join_string(blocks)
+
+    expect(str).to eq('some string')
+  end
 end
 
 def chars_as_block(*chars)
