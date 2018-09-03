@@ -1,3 +1,4 @@
+require 'key_scheduler'
 require 'half_round'
 require 'inner_round'
 require 'swap_round'
