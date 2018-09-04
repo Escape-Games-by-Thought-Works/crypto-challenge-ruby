@@ -13,9 +13,10 @@ key = key_hex.hex & 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
 puts "The key is: 0x#{key.to_s(16).upcase.rjust(32, '0')}"
 
 puts "(E)ncrypt or (D)ecrypt?"
-enc = gets.downcase.equal? 'e' ? true : false
+chosen_answer = gets.downcase
+enc = chosen_answer.start_with?('e')
 
-puts "Enter the text:"
+puts (enc ? 'Enter the text to encrpyt:' : 'Enter the base64 code to decrypt:')
 
 text = gets
 
